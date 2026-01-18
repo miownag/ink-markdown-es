@@ -28,7 +28,7 @@
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
-    "dev": "rslib build --watch",
+    "dev": "bun --watch run examples/index.tsx",
     "format": "biome format --write",
     "prepublishOnly": "bun run build"
   },

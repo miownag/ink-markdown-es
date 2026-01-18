@@ -21,8 +21,8 @@ bun add ink-markdown-es
 ```
 
 ```tsx
-import Markdown from 'ink-markdown-es';
-import { render } from 'ink';
+import Markdown from "ink-markdown-es";
+import { render } from "ink";
 
 const text = `# Hello World
 
@@ -58,8 +58,22 @@ Check out [this link](https://example.com) for more info.
 | Bob | 30 |
 `;
 
-render(<Markdown showSharp>{text}</Markdown>);
-
+render(
+  <Markdown
+    showSharp
+    renderers={{
+      h1: (text) => (
+        <Box padding={1} borderStyle="round" borderDimColor>
+          <Text bold color="greenBright">
+            {text}
+          </Text>
+        </Box>
+      ),
+    }}
+  >
+    {text}
+  </Markdown>
+);
 ```
 
 ## Contributing
@@ -73,5 +87,5 @@ bun install
 To run:
 
 ```bash
-bun run index.ts
+bun run dev
 ```

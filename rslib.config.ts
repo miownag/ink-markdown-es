@@ -1,10 +1,10 @@
-import { defineConfig } from "@rslib/core";
+import { defineConfig } from '@rslib/core';
 
 export default defineConfig({
   lib: [
     {
-      format: "esm",
-      syntax: ["node 20"],
+      format: 'esm',
+      syntax: ['node 20'],
       dts: true,
     },
   ],

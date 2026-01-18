@@ -1,5 +1,5 @@
-import Markdown from '../src/index';
-import { render } from 'ink';
+import Markdown from '../src';
+import { Box, render, Text, useInput } from 'ink';
 
 const text = `# Hello World
 
@@ -36,4 +36,25 @@ Check out [this link](https://example.com) for more info.
 | Bob | 30 |
 `;
 
-render(<Markdown showSharp>{text}</Markdown>);
+const TestApp = () => {
+  useInput(() => {});
+
+  return (
+    <Markdown
+      showSharp
+      renderers={{
+        h1: (text) => (
+          <Box padding={1} borderStyle="round" borderDimColor>
+            <Text bold color="greenBright">
+              {text}
+            </Text>
+          </Box>
+        ),
+      }}
+    >
+      {text}
+    </Markdown>
+  );
+};
+
+render(<TestApp />);
