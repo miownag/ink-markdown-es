@@ -8,6 +8,7 @@ Compare with [ink-markdown](https://github.com/vadimdemedes/ink-markdown):
 
 - ES module
 - Use memo to cache rendered output
+- More flexible configuration
 
 ## Quick Start
 
@@ -20,24 +21,45 @@ bun add ink-markdown-es
 ```
 
 ```tsx
-import { Markdown } from "../index";
-import { render } from "ink";
-import chalk from "chalk";
+import Markdown from 'ink-markdown-es';
+import { render } from 'ink';
 
-const text = `
-# Hello World
+const text = `# Hello World
+
+This is a show case.
 
 ## Features
-
 - Render markdown in ink
 - Support custom renderers
+- **Bold text** and *italic text*
+- Inline \`code\` support
+
+### Code Block
+
+\`\`\`javascript
+const hello = "world";
+console.log(hello);
+\`\`\`
+
+> This is a blockquote
+> with multiple lines
+
+---
+
+Check out [this link](https://example.com) for more info.
+
+1. First item
+2. Second item
+3. Third item
+
+| Name | Age |
+|------|-----|
+| Alice | 25 |
+| Bob | 30 |
 `;
 
-render(
-  <Markdown renderOptions={{ firstHeading: chalk.bgAnsi256(99) }}>
-    {text}
-  </Markdown>,
-);
+render(<Markdown showSharp>{text}</Markdown>);
+
 ```
 
 ## Contributing
