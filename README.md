@@ -6,18 +6,18 @@ Inspired by [ink-markdown](https://github.com/vadimdemedes/ink-markdown) and [pr
 
 Compare with [ink-markdown](https://github.com/vadimdemedes/ink-markdown):
 
-- ES module
-- Use memo to cache rendered output
-- More flexible configuration
+- **ES module** support & only
+- Use memo & useMemo to improve performance
+- More flexible configuration (`renderers`  prop)
 
 ## Quick Start
 
 ```bash
-npm install ink-markdown-es
-#or
-pnpm add ink-markdown-es
-#or
-bun add ink-markdown-es
+npm install ink-markdown-es  # npm
+
+pnpm add ink-markdown-es     # pnpm
+
+bun add ink-markdown-es      # bun
 ```
 
 ```tsx
@@ -27,6 +27,7 @@ import { render } from "ink";
 const text = `# Hello World
 
 This is a show case.
+It's very fast!
 
 ## Features
 - Render markdown in ink
@@ -75,6 +76,9 @@ render(
   </Markdown>
 );
 ```
+
+<img width="1919" height="689" alt="image" src="https://github.com/user-attachments/assets/d7cc741d-4c52-4b27-b183-ca8cce13007b" />
+
 
 ## Contributing
 
