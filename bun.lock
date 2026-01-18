@@ -21,7 +21,7 @@
       },
       "peerDependencies": {
         "ink": "^6",
-        "react": "^19",
+        "react": "^18 || ^19",
       },
     },
   },
