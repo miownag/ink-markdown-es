@@ -1,0 +1,55 @@
+{
+  "name": "ink-markdown-es",
+  "version": "1.0.0",
+  "description": "A modern performance markdown renderer for ink",
+  "keywords": [
+    "markdown",
+    "ink",
+    "react",
+    "esm"
+  ],
+  "author": "Mio <miownag@gmail.com>",
+  "repository": "https://github.com/miownag/ink-markdown-es",
+  "module": "dist/index.js",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/examples",
+    "package.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rslib build",
+    "check": "biome check --write",
+    "dev": "rslib build --watch",
+    "format": "biome format --write",
+    "prepublishOnly": "bun run build"
+  },
+  "devDependencies": {
+    "@rslib/core": "^0.19.2",
+    "@types/bun": "latest",
+    "@types/dedent": "^0.7.2",
+    "@types/react": "^19",
+    "@biomejs/biome": "2.3.8",
+    "ink": "^6",
+    "react": "^19",
+    "react-devtools-core": "^6",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "ink": "^6",
+    "react": "^19"
+  },
+  "dependencies": {
+    "dedent": "^1.7.1",
+    "marked": "^16.4.2"
+  },
+  "license": "MIT"
+}
