@@ -79,6 +79,13 @@ render(
 
 <img width="1919" height="689" alt="image" src="https://github.com/user-attachments/assets/d7cc741d-4c52-4b27-b183-ca8cce13007b" />
 
+## Props
+
+- `children` (string): The markdown content to render.
+- `id` (string, optional): A unique identifier for the component. In AI scene, it's useful to identify the component in the DOM tree, you can use AI message id.
+- `styles` (BlockStyles, optional): Custom styles for markdown blocks.
+- `renderers` (BlockRenderers, optional): Custom renderers for markdown blocks.
+- `showSharp` (boolean, optional): Whether to show sharp signs for headings. Default is `false`.
 
 ## Contributing
 

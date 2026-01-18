@@ -102,6 +102,7 @@ export type BlockRenderers = {
 
 export type MarkdownProps = {
   children: string;
+  id?: string;
   styles?: BlockStyles;
   renderers?: BlockRenderers;
   showSharp?: boolean;

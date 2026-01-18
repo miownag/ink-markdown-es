@@ -1,3 +1,4 @@
+import { pluginReact } from '@rsbuild/plugin-react';
 import { defineConfig } from '@rslib/core';
 
 export default defineConfig({
@@ -8,4 +9,9 @@ export default defineConfig({
       dts: true,
     },
   ],
+  output: {
+    target: 'node',
+    externals: ['react', 'react/jsx-runtime', 'ink'],
+  },
+  plugins: [pluginReact()],
 });

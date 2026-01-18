@@ -1,6 +1,6 @@
 {
   "name": "ink-markdown-es",
-  "version": "1.0.1",
+  "version": "1.0.2-alpha.0",
   "description": "A modern performance markdown renderer for ink",
   "keywords": [
     "markdown",
@@ -42,11 +42,12 @@
     "ink": "^6",
     "react": "^19",
     "react-devtools-core": "^6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@rsbuild/plugin-react": "^1.4.3"
   },
   "peerDependencies": {
     "ink": "^6",
-    "react": "^18 || ^19"
+    "react": "^19"
   },
   "dependencies": {
     "dedent": "^1.7.1",

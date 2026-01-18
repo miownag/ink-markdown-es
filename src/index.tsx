@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: <empty> */
-import { memo, useMemo, useId, type ReactNode } from 'react';
+import { memo, useId, useMemo, type ReactNode } from 'react';
 import { marked, type Token, type Tokens } from 'marked';
 import { Text, Box } from 'ink';
 import type {
@@ -432,11 +432,13 @@ MemoizedBlock.displayName = 'MemoizedBlock';
 
 function MarkdownComponent({
   children,
+  id,
   styles = {},
   renderers = {},
   showSharp = false,
 }: MarkdownProps) {
   const generatedId = useId();
+  const key = id || generatedId;
 
   const tokens = useMemo(() => {
     return marked.lexer(children);
@@ -446,7 +448,7 @@ function MarkdownComponent({
     <Box flexDirection="column">
       {tokens.map((token, index) => (
         <MemoizedBlock
-          key={`${generatedId}-block-${index}`}
+          key={`${key}-block-${index}`}
           token={token}
           styles={styles}
           renderers={renderers}
