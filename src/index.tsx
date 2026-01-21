@@ -1,7 +1,10 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: <empty> */
-import { memo, useId, useMemo, type ReactNode } from 'react';
+
+import { Box, Text } from 'ink';
 import { marked, type Token, type Tokens } from 'marked';
-import { Text, Box } from 'ink';
+import { memo, type ReactNode, useId, useMemo } from 'react';
+import { DEFAULT_STYLES } from './constants';
+import { highlightCode } from './highlight';
 import type {
   BlockRenderers,
   BlockStyles,
@@ -12,7 +15,6 @@ import type {
   MemoizedBlockProps,
 } from './types';
 import { extractBoxProps, extractTextProps, mergeStyles } from './utils';
-import { DEFAULT_STYLES } from './constants';
 
 function renderInlineTokens(
   tokens: Token[] | undefined,
@@ -181,6 +183,7 @@ function renderBlockToken(
   styles: BlockStyles,
   renderers: BlockRenderers,
   showSharp?: boolean,
+  highlight?: boolean,
 ): ReactNode {
   switch (token.type) {
     case 'heading': {
@@ -246,6 +249,23 @@ function renderBlockToken(
       if (renderers.code) {
         return renderers.code(codeToken.text, codeToken.lang, codeToken);
       }
+
+      if (highlight) {
+        const highlightedCode = highlightCode(codeToken.text, codeToken.lang);
+        if (highlightedCode) {
+          return (
+            <Box
+              backgroundColor="gray"
+              paddingX={2}
+              paddingY={1}
+              {...extractBoxProps(codeStyle)}
+            >
+              <Text {...extractTextProps(codeStyle)}>{highlightedCode}</Text>
+            </Box>
+          );
+        }
+      }
+
       return (
         <Box {...extractBoxProps(codeStyle)}>
           <Text {...extractTextProps(codeStyle)}>{codeToken.text}</Text>
@@ -261,18 +281,26 @@ function renderBlockToken(
       );
 
       const content = blockquoteToken.tokens.map((t, i) => (
-        <Box key={`bq-${i}`}>{renderBlockToken(t, styles, renderers)}</Box>
+        <Box key={`bq-${i}`}>
+          {renderBlockToken(t, styles, renderers, showSharp, highlight)}
+        </Box>
       ));
 
       if (renderers.blockquote) {
-        return renderers.blockquote(<>{content}</>, blockquoteToken);
+        return renderers.blockquote(content, blockquoteToken);
       }
 
       return (
         <Box {...extractBoxProps(blockquoteStyle)}>
           <Box flexDirection="column">
             {blockquoteToken.tokens.map((t, i) => {
-              const rendered = renderBlockToken(t, styles, renderers);
+              const rendered = renderBlockToken(
+                t,
+                styles,
+                renderers,
+                showSharp,
+                highlight,
+              );
               if (rendered) {
                 return (
                   <Text
@@ -422,8 +450,11 @@ const MemoizedBlock = memo(
     styles,
     renderers,
     showSharp,
+    highlight,
   }: MemoizedBlockProps) {
-    return <>{renderBlockToken(token, styles, renderers, showSharp)}</>;
+    return (
+      <>{renderBlockToken(token, styles, renderers, showSharp, highlight)}</>
+    );
   },
   (prevProps, nextProps) => prevProps.token === nextProps.token,
 );
@@ -436,6 +467,7 @@ function MarkdownComponent({
   styles = {},
   renderers = {},
   showSharp = false,
+  highlight = true,
 }: MarkdownProps) {
   const generatedId = useId();
   const key = id || generatedId;
@@ -453,6 +485,7 @@ function MarkdownComponent({
           styles={styles}
           renderers={renderers}
           showSharp={showSharp}
+          highlight={highlight}
         />
       ))}
     </Box>

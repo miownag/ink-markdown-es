@@ -21,9 +21,6 @@ bun add ink-markdown-es      # bun
 ```
 
 ```tsx
-import Markdown from "ink-markdown-es";
-import { render } from "ink";
-
 const text = `# Hello World
 
 This is a show case.
@@ -34,12 +31,27 @@ It's very fast!
 - Support custom renderers
 - **Bold text** and *italic text*
 - Inline \`code\` support
+- **Syntax highlighting** for code blocks powered by highlight.js
 
-### Code Block
+### Code Block with Syntax Highlighting
 
-\`\`\`javascript
-const hello = "world";
-console.log(hello);
+\`\`\`typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const user: User = {
+  id: 1,
+  name: "Alice",
+  email: "alice@example.com"
+};
+
+async function fetchUser(id: number): Promise<User> {
+  const response = await fetch(\`/api/users/\${id}\`);
+  return response.json();
+}
 \`\`\`
 
 > This is a blockquote
@@ -59,22 +71,29 @@ Check out [this link](https://example.com) for more info.
 | Bob | 30 |
 `;
 
-render(
-  <Markdown
-    showSharp
-    renderers={{
-      h1: (text) => (
-        <Box padding={1} borderStyle="round" borderDimColor>
-          <Text bold color="greenBright">
-            {text}
-          </Text>
-        </Box>
-      ),
-    }}
-  >
-    {text}
-  </Markdown>
-);
+const TestApp = () => {
+  useInput(() => {});
+
+  return (
+    <Markdown
+      showSharp
+      renderers={{
+        h1: (text) => (
+          <Box padding={1} borderStyle="round" borderDimColor>
+            <Text bold color="greenBright">
+              {text}
+            </Text>
+          </Box>
+        ),
+      }}
+    >
+      {text}
+    </Markdown>
+  );
+};
+
+render(<TestApp />);
+
 ```
 
 <img width="1919" height="689" alt="image" src="https://github.com/user-attachments/assets/d7cc741d-4c52-4b27-b183-ca8cce13007b" />

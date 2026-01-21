@@ -1,6 +1,6 @@
-import type { ReactNode, ComponentProps } from 'react';
+import type { Box, Text } from 'ink';
 import type { Token, Tokens } from 'marked';
-import type { Text, Box } from 'ink';
+import type { ComponentProps, ReactNode } from 'react';
 
 export type TextStyleProps = Pick<
   ComponentProps<typeof Text>,
@@ -106,6 +106,11 @@ export type MarkdownProps = {
   styles?: BlockStyles;
   renderers?: BlockRenderers;
   showSharp?: boolean;
+  /**
+   * Enable syntax highlighting for code blocks
+   * @default true
+   */
+  highlight?: boolean;
 };
 
 export type MemoizedBlockProps = {
@@ -113,4 +118,5 @@ export type MemoizedBlockProps = {
   styles: BlockStyles;
   renderers: BlockRenderers;
   showSharp: boolean;
+  highlight: boolean;
 };

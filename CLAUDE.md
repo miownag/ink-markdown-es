@@ -13,6 +13,7 @@
 
 - Use marked to parse markdown
 - Use marked-terminal to render markdown in ink Text
+- Use highlight.js to highlight code
 - Use memo to cache rendered output
 
 ## Scripts

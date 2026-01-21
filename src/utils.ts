@@ -1,5 +1,5 @@
-import { TEXT_STYLE_KEYS, BOX_STYLE_KEYS } from './constants';
-import type { TextStyleProps, BoxStyleProps } from './types';
+import { BOX_STYLE_KEYS, TEXT_STYLE_KEYS } from './constants';
+import type { BoxStyleProps, TextStyleProps } from './types';
 
 export function extractTextProps(
   style: (TextStyleProps & BoxStyleProps) | undefined,

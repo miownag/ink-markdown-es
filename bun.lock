@@ -5,12 +5,13 @@
     "": {
       "name": "ink-markdown-es",
       "dependencies": {
-        "@rsbuild/plugin-react": "^1.4.3",
         "dedent": "^1.7.1",
+        "highlight.js": "^11.11.1",
         "marked": "^16.4.2",
       },
       "devDependencies": {
         "@biomejs/biome": "2.3.8",
+        "@rsbuild/plugin-react": "^1.4.3",
         "@rslib/core": "^0.19.2",
         "@types/bun": "latest",
         "@types/dedent": "^0.7.2",
@@ -172,6 +173,8 @@
     "escape-string-regexp": ["escape-string-regexp@2.0.0", "", {}, "sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w=="],
 
     "get-east-asian-width": ["get-east-asian-width@1.4.0", "", {}, "sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q=="],
+
+    "highlight.js": ["highlight.js@11.11.1", "https://mirrors.tencent.com/npm/highlight.js/-/highlight.js-11.11.1.tgz", {}, "sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w=="],
 
     "html-entities": ["html-entities@2.6.0", "", {}, "sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ=="],
 

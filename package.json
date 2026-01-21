@@ -1,6 +1,6 @@
 {
   "name": "ink-markdown-es",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A modern performance markdown renderer for ink",
   "keywords": [
     "markdown",
@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "dedent": "^1.7.1",
+    "highlight.js": "^11.11.1",
     "marked": "^16.4.2"
   }
 }

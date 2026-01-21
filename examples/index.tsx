@@ -1,9 +1,9 @@
-import Markdown from '../src';
 import { Box, render, Text, useInput } from 'ink';
+import Markdown from '../src';
 
 const text = `# Hello World
 
-This is a show case.  
+This is a show case.
 It's very fast!
 
 ## Features
@@ -11,12 +11,27 @@ It's very fast!
 - Support custom renderers
 - **Bold text** and *italic text*
 - Inline \`code\` support
+- **Syntax highlighting** for code blocks powered by highlight.js
 
-### Code Block
+### Code Block with Syntax Highlighting
 
-\`\`\`javascript
-const hello = "world";
-console.log(hello);
+\`\`\`typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const user: User = {
+  id: 1,
+  name: "Alice",
+  email: "alice@example.com"
+};
+
+async function fetchUser(id: number): Promise<User> {
+  const response = await fetch(\`/api/users/\${id}\`);
+  return response.json();
+}
 \`\`\`
 
 > This is a blockquote
