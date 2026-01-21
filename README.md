@@ -96,7 +96,7 @@ render(<TestApp />);
 
 ```
 
-<img width="1919" height="689" alt="image" src="https://github.com/user-attachments/assets/d7cc741d-4c52-4b27-b183-ca8cce13007b" />
+<img width="1904" height="964" alt="image" src="https://github.com/user-attachments/assets/bed0c942-6d08-4f24-a42a-4999bdf1fc85" />
 
 ## Props
 
