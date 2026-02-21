@@ -65,7 +65,7 @@ const TestApp = () => {
   return (
     <Markdown
       showSharp
-      theme="dracula"
+      theme="one-dark-pro"
       renderers={{
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
