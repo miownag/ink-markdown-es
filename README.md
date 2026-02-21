@@ -77,7 +77,7 @@ const TestApp = () => {
   return (
     <Markdown
       showSharp
-      theme="dracula"
+      theme="one-dark-pro"
       renderers={{
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
@@ -97,7 +97,7 @@ render(<TestApp />);
 
 ```
 
-<img width="1904" height="964" alt="image" src="https://github.com/user-attachments/assets/bed0c942-6d08-4f24-a42a-4999bdf1fc85" />
+<img width="1727" height="982" alt="image" src="https://github.com/user-attachments/assets/83da09b2-c533-4098-9938-227595bc015e" />
 
 ## Props
 
