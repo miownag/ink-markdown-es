@@ -77,6 +77,7 @@ const TestApp = () => {
   return (
     <Markdown
       showSharp
+      theme="dracula"
       renderers={{
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
@@ -105,6 +106,7 @@ render(<TestApp />);
 - `styles` (BlockStyles, optional): Custom styles for markdown blocks.
 - `renderers` (BlockRenderers, optional): Custom renderers for markdown blocks.
 - `showSharp` (boolean, optional): Whether to show sharp signs for headings. Default is `false`.
+- `theme` (string, optional): The theme for syntax highlighting. Default is `github-dark`. Check out [shiki](https://shiki.style/themes) for more themes.
 
 ## Contributing
 

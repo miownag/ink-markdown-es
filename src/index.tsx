@@ -2,9 +2,16 @@
 
 import { Box, Text } from 'ink';
 import { marked, type Token, type Tokens } from 'marked';
-import { memo, type ReactNode, useId, useMemo } from 'react';
+import {
+  memo,
+  type ReactNode,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
 import { DEFAULT_STYLES } from './constants';
-import { highlightCode } from './highlight';
+import { highlightCodeAsync } from './highlight';
 import type {
   BlockRenderers,
   BlockStyles,
@@ -15,6 +22,61 @@ import type {
   MemoizedBlockProps,
 } from './types';
 import { extractBoxProps, extractTextProps, mergeStyles } from './utils';
+
+// CodeBlock component for async syntax highlighting
+interface CodeBlockProps {
+  code: string;
+  language?: string;
+  style: BlockStyles['code'];
+  theme: string;
+}
+
+function CodeBlock({ code, language, style, theme }: CodeBlockProps) {
+  const [highlightedCode, setHighlightedCode] = useState<ReactNode[] | null>(
+    null,
+  );
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function highlight() {
+      try {
+        const result = await highlightCodeAsync(code, language, theme);
+        if (!cancelled) {
+          setHighlightedCode(result);
+          setIsLoading(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setHighlightedCode(null);
+          setIsLoading(false);
+        }
+      }
+    }
+
+    highlight();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [code, language, theme]);
+
+  // Show plain text while loading or if highlighting failed
+  if (isLoading || !highlightedCode) {
+    return (
+      <Box {...extractBoxProps(style)}>
+        <Text {...extractTextProps(style)}>{code}</Text>
+      </Box>
+    );
+  }
+
+  return (
+    <Box paddingX={2} paddingY={1} {...extractBoxProps(style)}>
+      <Text {...extractTextProps(style)}>{highlightedCode}</Text>
+    </Box>
+  );
+}
 
 function renderInlineTokens(
   tokens: Token[] | undefined,
@@ -184,6 +246,7 @@ function renderBlockToken(
   renderers: BlockRenderers,
   showSharp?: boolean,
   highlight?: boolean,
+  theme: string = 'github-dark',
 ): ReactNode {
   switch (token.type) {
     case 'heading': {
@@ -251,19 +314,14 @@ function renderBlockToken(
       }
 
       if (highlight) {
-        const highlightedCode = highlightCode(codeToken.text, codeToken.lang);
-        if (highlightedCode) {
-          return (
-            <Box
-              backgroundColor="gray"
-              paddingX={2}
-              paddingY={1}
-              {...extractBoxProps(codeStyle)}
-            >
-              <Text {...extractTextProps(codeStyle)}>{highlightedCode}</Text>
-            </Box>
-          );
-        }
+        return (
+          <CodeBlock
+            code={codeToken.text}
+            language={codeToken.lang}
+            style={codeStyle}
+            theme={theme}
+          />
+        );
       }
 
       return (
@@ -282,7 +340,7 @@ function renderBlockToken(
 
       const content = blockquoteToken.tokens.map((t, i) => (
         <Box key={`bq-${i}`}>
-          {renderBlockToken(t, styles, renderers, showSharp, highlight)}
+          {renderBlockToken(t, styles, renderers, showSharp, highlight, theme)}
         </Box>
       ));
 
@@ -300,6 +358,7 @@ function renderBlockToken(
                 renderers,
                 showSharp,
                 highlight,
+                theme,
               );
               if (rendered) {
                 return (
@@ -391,38 +450,107 @@ function renderBlockToken(
       const tableStyle = mergeStyles(DEFAULT_STYLES.table, styles.table);
       const cellStyle = mergeStyles(DEFAULT_STYLES.tableCell, styles.tableCell);
 
-      const headerCells = tableToken.header.map((cell, i) => (
-        <Box key={`th-${i}`} {...extractBoxProps(cellStyle)}>
-          <Text bold {...extractTextProps(cellStyle)}>
-            {renderInlineTokens(cell.tokens, styles, renderers)}
-          </Text>
-        </Box>
-      ));
+      // Calculate column widths
+      const getCellText = (tokens: Token[]) => {
+        return tokens
+          .map((t) => {
+            if ('text' in t) return (t as { text: string }).text;
+            return '';
+          })
+          .join('');
+      };
 
-      const header = <Box flexDirection="row">{headerCells}</Box>;
+      const columnWidths = tableToken.header.map((cell, colIndex) => {
+        const headerWidth = getCellText(cell.tokens).length;
+        const bodyWidth = Math.max(
+          ...tableToken.rows.map((row) => {
+            const cellTokens = row[colIndex]?.tokens;
+            return cellTokens ? getCellText(cellTokens).length : 0;
+          }),
+          0,
+        );
+        return Math.max(headerWidth, bodyWidth, 3);
+      });
 
-      const bodyRows = tableToken.rows.map((row, rowIndex) => (
-        <Box key={`tr-${rowIndex}`} flexDirection="row">
-          {row.map((cell, cellIndex) => (
-            <Box key={`td-${cellIndex}`} {...extractBoxProps(cellStyle)}>
-              <Text {...extractTextProps(cellStyle)}>
-                {renderInlineTokens(cell.tokens, styles, renderers)}
+      // Top border
+      const topBorder = (
+        <Text dimColor>
+          ┌─{columnWidths.map((w) => '─'.repeat(w)).join('─┬─')}─┐
+        </Text>
+      );
+
+      // Header row with separators
+      const headerRow = (
+        <Text>
+          <Text dimColor>│ </Text>
+          {tableToken.header.map((cell, i) => {
+            const content = renderInlineTokens(cell.tokens, styles, renderers);
+            const cellText = getCellText(cell.tokens);
+            return (
+              <Text key={`th-${i}`}>
+                <Text bold {...extractTextProps(cellStyle)}>
+                  {content}
+                  {' '.repeat(Math.max(0, (columnWidths[i] || 3) - cellText.length))}
+                </Text>
+                <Text dimColor> │{i < tableToken.header.length - 1 ? ' ' : ''}</Text>
               </Text>
-            </Box>
-          ))}
-        </Box>
+            );
+          })}
+        </Text>
+      );
+
+      // Header separator
+      const headerSeparator = (
+        <Text dimColor>
+          ├─{columnWidths.map((w) => '─'.repeat(w)).join('─┼─')}─┤
+        </Text>
+      );
+
+      // Render body rows
+      const bodyRows = tableToken.rows.map((row, rowIndex) => (
+        <Text key={`tr-${rowIndex}`}>
+          <Text dimColor>│ </Text>
+          {row.map((cell, cellIndex) => {
+            const content = renderInlineTokens(cell.tokens, styles, renderers);
+            const cellText = getCellText(cell.tokens);
+            const colWidth = columnWidths[cellIndex] || 3;
+            return (
+              <Text key={`td-${rowIndex}-${cellIndex}`}>
+                <Text {...extractTextProps(cellStyle)}>
+                  {content}
+                  {' '.repeat(Math.max(0, colWidth - cellText.length))}
+                </Text>
+                <Text dimColor> │{cellIndex < row.length - 1 ? ' ' : ''}</Text>
+              </Text>
+            );
+          })}
+        </Text>
       ));
 
-      const body = <>{bodyRows}</>;
+      // Bottom border
+      const bottomBorder = (
+        <Text dimColor>
+          └─{columnWidths.map((w) => '─'.repeat(w)).join('─┴─')}─┘
+        </Text>
+      );
+
+      const tableContent = (
+        <>
+          {topBorder}
+          {headerRow}
+          {headerSeparator}
+          {bodyRows}
+          {bottomBorder}
+        </>
+      );
 
       if (renderers.table) {
-        return renderers.table(header, body, tableToken);
+        return renderers.table(headerRow, bodyRows, tableToken);
       }
 
       return (
         <Box flexDirection="column" {...extractBoxProps(tableStyle)}>
-          {header}
-          {body}
+          {tableContent}
         </Box>
       );
     }
@@ -451,9 +579,19 @@ const MemoizedBlock = memo(
     renderers,
     showSharp,
     highlight,
+    theme,
   }: MemoizedBlockProps) {
     return (
-      <>{renderBlockToken(token, styles, renderers, showSharp, highlight)}</>
+      <>
+        {renderBlockToken(
+          token,
+          styles,
+          renderers,
+          showSharp,
+          highlight,
+          theme,
+        )}
+      </>
     );
   },
   (prevProps, nextProps) => prevProps.token === nextProps.token,
@@ -468,12 +606,16 @@ function MarkdownComponent({
   renderers = {},
   showSharp = false,
   highlight = true,
+  theme = 'github-dark',
 }: MarkdownProps) {
   const generatedId = useId();
   const key = id || generatedId;
 
   const tokens = useMemo(() => {
-    return marked.lexer(children);
+    return marked.lexer(children, {
+      silent: true,
+      gfm: true,
+    });
   }, [children]);
 
   return (
@@ -486,6 +628,7 @@ function MarkdownComponent({
           renderers={renderers}
           showSharp={showSharp}
           highlight={highlight}
+          theme={theme}
         />
       ))}
     </Box>

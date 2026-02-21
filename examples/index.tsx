@@ -1,4 +1,5 @@
 import { Box, render, Text, useInput } from 'ink';
+import { useEffect, useState } from 'react';
 import Markdown from '../src';
 
 const text = `# Hello World
@@ -11,7 +12,7 @@ It's very fast!
 - Support custom renderers
 - **Bold text** and *italic text*
 - Inline \`code\` support
-- **Syntax highlighting** for code blocks powered by highlight.js
+- **Syntax highlighting** for code blocks powered by Shiki
 
 ### Code Block with Syntax Highlighting
 
@@ -53,10 +54,18 @@ Check out [this link](https://example.com) for more info.
 
 const TestApp = () => {
   useInput(() => {});
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    setInterval(() => {
+      setContent((c) => text.slice(0, c.length + 20));
+    }, 100);
+  }, []);
 
   return (
     <Markdown
       showSharp
+      theme="dracula"
       renderers={{
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
@@ -67,7 +76,7 @@ const TestApp = () => {
         ),
       }}
     >
-      {text}
+      {content}
     </Markdown>
   );
 };

@@ -111,6 +111,13 @@ export type MarkdownProps = {
    * @default true
    */
   highlight?: boolean;
+  /**
+   * Shiki theme name for syntax highlighting
+   * @default 'github-dark'
+   * @example 'github-dark', 'github-light', 'nord', 'dracula', etc.
+   * @see https://shiki.style/themes
+   */
+  theme?: string;
 };
 
 export type MemoizedBlockProps = {
@@ -119,4 +126,5 @@ export type MemoizedBlockProps = {
   renderers: BlockRenderers;
   showSharp: boolean;
   highlight: boolean;
+  theme: string;
 };
