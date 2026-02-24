@@ -20,7 +20,18 @@ pnpm add ink-markdown-es     # pnpm
 bun add ink-markdown-es      # bun
 ```
 
+If you wanna highlight the code part, you can use [ink-shiki-code](https://www.npmjs.com/package/ink-shiki-code).
+
+```bash
+bun add ink-shiki-code
+```
+
 ```tsx
+import { Box, render, Text, useInput } from "ink";
+import { createShikiCodeRenderer } from "ink-shiki-code";
+import { useEffect, useState } from "react";
+import Markdown from "../src";
+
 const text = `# Hello World
 
 This is a show case.
@@ -31,7 +42,7 @@ It's very fast!
 - Support custom renderers
 - **Bold text** and *italic text*
 - Inline \`code\` support
-- **Syntax highlighting** for code blocks powered by highlight.js
+- **Syntax highlighting** via ink-shiki-code (opt-in)
 
 ### Code Block with Syntax Highlighting
 
@@ -71,14 +82,24 @@ Check out [this link](https://example.com) for more info.
 | Bob | 30 |
 `;
 
+// Create a code renderer once, outside the component, to keep the reference stable.
+const codeRenderer = createShikiCodeRenderer({ theme: "one-dark-pro" });
+
 const TestApp = () => {
   useInput(() => {});
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    setInterval(() => {
+      setContent((c) => text.slice(0, c.length + 20));
+    }, 100);
+  }, []);
 
   return (
     <Markdown
       showSharp
-      theme="one-dark-pro"
       renderers={{
+        code: codeRenderer,
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
             <Text bold color="greenBright">
@@ -88,7 +109,7 @@ const TestApp = () => {
         ),
       }}
     >
-      {text}
+      {content}
     </Markdown>
   );
 };
@@ -106,7 +127,6 @@ render(<TestApp />);
 - `styles` (BlockStyles, optional): Custom styles for markdown blocks.
 - `renderers` (BlockRenderers, optional): Custom renderers for markdown blocks.
 - `showSharp` (boolean, optional): Whether to show sharp signs for headings. Default is `false`.
-- `theme` (string, optional): The theme for syntax highlighting. Default is `github-dark`. Check out [shiki](https://shiki.style/themes) for more themes.
 
 ## Contributing
 
