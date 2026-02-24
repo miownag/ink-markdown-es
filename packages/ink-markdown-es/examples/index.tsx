@@ -1,6 +1,7 @@
-import { Box, render, Text, useInput } from 'ink';
-import { useEffect, useState } from 'react';
-import Markdown from '../src';
+import { Box, render, Text, useInput } from "ink";
+import { createShikiCodeRenderer } from "ink-shiki-code";
+import { useEffect, useState } from "react";
+import Markdown from "../src";
 
 const text = `# Hello World
 
@@ -12,7 +13,7 @@ It's very fast!
 - Support custom renderers
 - **Bold text** and *italic text*
 - Inline \`code\` support
-- **Syntax highlighting** for code blocks powered by Shiki
+- **Syntax highlighting** via ink-shiki-code (opt-in)
 
 ### Code Block with Syntax Highlighting
 
@@ -52,9 +53,12 @@ Check out [this link](https://example.com) for more info.
 | Bob | 30 |
 `;
 
+// Create a code renderer once, outside the component, to keep the reference stable.
+const codeRenderer = createShikiCodeRenderer({ theme: "one-dark-pro" });
+
 const TestApp = () => {
   useInput(() => {});
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     setInterval(() => {
@@ -65,8 +69,8 @@ const TestApp = () => {
   return (
     <Markdown
       showSharp
-      theme="one-dark-pro"
       renderers={{
+        code: codeRenderer,
         h1: (text) => (
           <Box padding={1} borderStyle="round" borderDimColor>
             <Text bold color="greenBright">

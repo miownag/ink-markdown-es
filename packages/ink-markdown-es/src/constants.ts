@@ -17,7 +17,7 @@ export const DEFAULT_STYLES: BlockStyles = {
     borderStyle: 'single',
     borderDimColor: true,
   },
-  code: { marginTop: 1 },
+  code: { marginTop: 1, paddingX: 2 },
   codespan: { dimColor: true },
   list: {},
   listItem: { bullet: '●', paddingLeft: 2 },
