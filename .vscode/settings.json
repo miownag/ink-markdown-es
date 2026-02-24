@@ -4,5 +4,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
     "source.sortImports": "explicit"
-  }
+  },
+  "cSpell.words": [
+    "rsbuild",
+    "shiki"
+  ]
 }

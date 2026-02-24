@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: <empty> */
+
 import { Text } from 'ink';
 import type { ReactNode } from 'react';
 import { codeToTokens } from 'shiki';
@@ -6,12 +8,12 @@ import { codeToTokens } from 'shiki';
 export async function highlightCodeAsync(
   code: string,
   language?: string,
-  theme: string = 'github-dark',
+  theme = 'github-dark',
 ): Promise<ReactNode[] | null> {
   try {
     const result = await codeToTokens(code, {
-      lang: (language || 'text') as any,
-      theme: theme,
+      lang: (language || 'text') as never,
+      theme,
     });
 
     const nodes: ReactNode[] = [];
